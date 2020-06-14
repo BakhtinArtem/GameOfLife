@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class Game
-{
-    int[,] gameArea;
-    int rows;
-    int column;
+public delegate void Notify();
+
+public class Game{
+
+    public Notify changed;
+
+    public int[,] gameArea;
+    public int rows;
+    public int column;
     int scale;
+
     public Game(int columns, int rows)
     {
         this.gameArea = Make2DArray(columns, rows);
@@ -91,18 +96,6 @@ class Program
     {
         Game game = new Game(15, 15);
         game.RandomFill();
-        game.Draw();
-        for (int i = 0; i < 100; i++)
-            game.NewGeneration();
-        game.Draw();
+        GameView.run(game);
     }
 }
-
-
-//public static void Main(string[] args)
-//{
-//    Application.Init();
-//    MainWindow win = new MainWindow();
-//    win.Show();
-//    Application.Run();
-//}
