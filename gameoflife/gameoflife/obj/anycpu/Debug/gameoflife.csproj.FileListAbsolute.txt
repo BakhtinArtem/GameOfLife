@@ -1,0 +1,6 @@
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/obj/anycpu/Debug/gameoflife.csprojAssemblyReference.cache
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/obj/anycpu/Debug/gameoflife.csproj.CoreCompileInputs.cache
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/bin/Debug/gameoflife.exe
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/bin/Debug/gameoflife.pdb
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/obj/anycpu/Debug/gameoflife.exe
+/Users/artembakhtin/Desktop/GameOfLife/gameoflife/gameoflife/obj/anycpu/Debug/gameoflife.pdb
