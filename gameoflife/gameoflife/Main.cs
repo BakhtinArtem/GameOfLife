@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public delegate void Notify();
 
@@ -17,17 +18,17 @@ public class Game{
         this.gameArea = Make2DArray(columns, rows);
         this.rows = rows;
         this.column = columns;
-        this.scale = 1;
     }
     private int[,] Make2DArray(int columns, int rows) => new int[columns, rows];
 
     public void NewGeneration()
     {
+
         int[,] NewCopy = Make2DArray(this.column, this.rows);
 
-        for (int i = 0; i < this.column * scale; i++)
+        for (int i = 0; i < this.column; i++)
         {
-            for (int j = 0; j < this.rows * scale; j++)
+            for (int j = 0; j < this.rows; j++)
             {
 
                 int Neighbours = this.ComputeNeighbours(i, j);
@@ -45,17 +46,7 @@ public class Game{
         }
         this.gameArea = NewCopy;
     }
-    public void RandomFill()
-    {
-        Random r = new Random();
-        for (int i = 0; i < this.column * scale; i++)
-        {
-            for (int j = 0; j < this.rows * scale; j++)
-            {
-                this.gameArea[i, j] = r.Next(2);
-            }
-        }
-    }
+
     private int ComputeNeighbours(int i, int j)
     {
         int sum = 0;
@@ -77,25 +68,16 @@ public class Game{
         }
         return sum - this.gameArea[i, j];
     }
-    public void Draw()
+    public void Clear()
     {
-        for (int i = 0; i < this.column * scale; i++)
-        {
-            for (int j = 0; j < this.rows * scale; j++)
-            {
-                Console.Write($"{this.gameArea[i, j]}|");
-            }
-            Console.WriteLine();
-        }
-        Console.WriteLine();
+        this.gameArea = new int[this.column, this.rows];
     }
 }
 class Program
 {
     static void Main(string[] args)
     {
-        Game game = new Game(15, 15);
-        game.RandomFill();
+        Game game = new Game(14 * 5, 14 * 5);
         GameView.run(game);
     }
 }
