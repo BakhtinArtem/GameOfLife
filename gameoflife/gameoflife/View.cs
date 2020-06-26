@@ -15,13 +15,16 @@ public class GameView : Window
     bool simulation = false;
     int scale = 1;
     uint generationSpeed = 500;
+    int[] lastcell = new int[2];
+    bool mousePressed;
 
     public GameView(Game game) : base("GameOfLife")
     {
         this.game = game;
 
         AddEvents((int)(EventMask.KeyPressMask | EventMask.ButtonPressMask
-            | EventMask.PointerMotionMask));
+            | EventMask.PointerMotionMask | EventMask.ButtonReleaseMask ));
+
         Resize(this.game.column * 10, this.game.rows * 10 + 70);
 
         //box with start/stop and clear button
@@ -94,31 +97,11 @@ public class GameView : Window
         HScale b = (HScale)sender;
         double val = b.Value;
 
-        switch (val)
-        {
-            case 0:
-                generationSpeed = 500;
-                break;
-            case 1:
-                generationSpeed = 400;
-                break;
-            case 2:
-                generationSpeed = 300;
-                break;
-            case 3:
-                generationSpeed = 200;
-                break;
-            case 4:
-                generationSpeed = 100;
-                break;
-            case 5:
-                generationSpeed = 50;
-                break;
-        }
-        if (this.simulation)
-        {
-            this.simulation = !this.simulation;
-        }
+        uint[] speeds = { 500, 400, 300, 200, 100, 50 };
+        generationSpeed = speeds[(int)val];
+
+        if (this.simulation){this.simulation = !this.simulation;}
+
         QueueDraw();
     }
 
@@ -127,18 +110,9 @@ public class GameView : Window
         HScale b = (HScale)sender;
         double val = b.Value;
 
-        switch (val)
-        {
-            case 0:
-                scale = 1;
-                break;
-            case 1:
-                scale = 2;
-                break;
-            case 2:
-                scale = 5;
-                break;
-        }
+        int[] scales = { 1, 2, 5};
+        scale = scales[(int)val];
+
         QueueDraw();
     }
 
@@ -173,24 +147,71 @@ public class GameView : Window
         c.Fill();
     }
 
+    protected override bool OnMotionNotifyEvent(EventMotion e)
+    {
+        if (mousePressed)
+        {
+            int x = (int)e.X;
+            int y = (int)e.Y;
+            int xi = x / (10 * scale);
+            int yi = (y - 70) / (10 * scale);
+            if (x > 0 && x < this.game.column * 10 && y > 70 && y <
+                this.game.rows * 10)
+            {
+                if (this.game.gameArea[xi,yi] == 0 && (xi != lastcell[0] ||
+                    yi != lastcell[1]))
+                {
+                    this.game.gameArea[xi,yi] = 1;
+                    lastcell[0] = xi;
+                    lastcell[1] = yi;
+                }
+                else if (this.game.gameArea[xi,yi] == 1 && (xi != lastcell[0] ||
+                    yi != lastcell[1]))
+                {
+                    this.game.gameArea[xi,yi] = 0;
+                    lastcell[0] = xi;
+                    lastcell[1] = yi;
+                }
+            }
+            QueueDraw(); 
+        }
+        return true;
+    }
+
+    protected override bool OnButtonReleaseEvent(EventButton e)
+    {
+        int x = (int)e.X;
+        int y = (int)e.Y;
+        if (x > 0 && x < this.game.column * 10 && y > 70 && y < this.game.rows
+            * 10)
+        {
+            mousePressed = false;
+        }
+        return true;
+    }
+
     protected override bool OnButtonPressEvent(EventButton e)
     {
         int x = (int)e.X;
         int y = (int)e.Y;
-        Console.WriteLine($"{x / (10 * scale)} {(y - 70) / (10 * scale)}");
-        if (this.game.gameArea[x / (10 * scale),
-            (y - 70) / (10 * scale)] == 0)
+        int xi = x / (10 * scale);
+        int yi = (y - 70) / (10 * scale);
+        if (x > 0 && x < this.game.column * 10 && y > 70 && y < this.game.rows
+                * 10)
         {
-            this.game.gameArea[x / (10 * scale),
-            (y-70) / (10 * scale)] = 1;
+            if (this.game.gameArea[xi,yi] == 0)
+            {
+                this.game.gameArea[xi,yi] = 1;
+            }
+            else
+            {
+                this.game.gameArea[xi,yi] = 0;
+            }
+            mousePressed = true;
+            lastcell[0] = xi;
+            lastcell[1] = yi;
+            QueueDraw();
         }
-        else
-        {
-            this.game.gameArea[x / (10 * scale),
-            (y-70)/ (10 * scale)] = 0;
-        }
-
-        QueueDraw();
         return true;
     }
 
