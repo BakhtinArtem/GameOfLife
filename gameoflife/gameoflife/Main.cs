@@ -11,7 +11,6 @@ public class Game{
     public int[,] gameArea;
     public int rows;
     public int column;
-    int scale;
 
     public Game(int columns, int rows)
     {
@@ -19,6 +18,7 @@ public class Game{
         this.rows = rows;
         this.column = columns;
     }
+
     private int[,] Make2DArray(int columns, int rows) => new int[columns, rows];
 
     public void NewGeneration()
